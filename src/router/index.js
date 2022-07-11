@@ -1,27 +1,28 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Login from '../views/login.vue'
-import Index from '../views/index.vue'
-import Home from '../components/index/Home/home.vue'
-import Goods from '../components/index/Goods/goods.vue'
-import Params from '../components/index/Params/params.vue'
-import Sort from '../components/index/Sort/sort.vue'
-import Order from '../components/index/Order/order.vue'
-import OrderList from '../components/index/Order/OrderList/orderList.vue'
-import OrderReturn from '../components/index/Order/OrderReturn/orderReturn.vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Login from '../views/login.vue';
+import Index from '../views/index.vue';
+import Home from '../views/index/Home/home.vue';
+import Goods from '../views/index/Goods/goods.vue';
+import Params from '../views/index/Params/params.vue';
+import Sort from '../views/index/Sort/sort.vue';
+import Order from '../views/index/Order/order.vue';
+import OrderList from '../views/index/Order/OrderList/orderList.vue';
+import OrderReturn from '../views/index/Order/OrderReturn/orderReturn.vue';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
     path: '',
     redirect: '/index',
-    component: Index
+    component: Index,
   },
   {
     path: '/login',
-    component: Login
-  }, {
+    component: Login,
+  },
+  {
     path: '/index',
     component: Index,
     children: [
@@ -32,43 +33,43 @@ const routes = [
       // },
       {
         path: '/',
-        component: Home
+        component: Home,
       },
       {
         path: '/goods',
-        component: Goods
+        component: Goods,
       },
       {
         path: '/params',
-        component: Params
+        component: Params,
       },
       {
         path: '/sort',
-        component: Sort
+        component: Sort,
       },
       {
         path: '/order',
         component: Order,
-        redirect:'/order/orderList',
+        redirect: '/order/orderList',
         children: [
           {
             path: 'orderList',
-            component: OrderList
+            component: OrderList,
           },
           {
             path: 'orderReturn',
-            component: OrderReturn
-          }
-        ]
-      }
-    ]
-  }
-]
+            component: OrderReturn,
+          },
+        ],
+      },
+    ],
+  },
+];
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
