@@ -9,6 +9,7 @@ import Sort from '../views/index/Sort/sort.vue';
 import Order from '../views/index/Order/order.vue';
 import OrderList from '../views/index/Order/OrderList/orderList.vue';
 import OrderReturn from '../views/index/Order/OrderReturn/orderReturn.vue';
+import AddGoods from '../views/index/Goods/addGoods.vue';
 
 Vue.use(VueRouter);
 
@@ -38,6 +39,10 @@ const routes = [
       {
         path: '/goods',
         component: Goods,
+      },
+      {
+        path: '/addGoods',
+        component: AddGoods,
       },
       {
         path: '/params',

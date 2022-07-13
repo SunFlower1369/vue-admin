@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <div id="header">
       <i
         class="icon el-icon-s-fold"
@@ -12,7 +12,7 @@
         :isCollapse="isCollapse"
         v-else
       ></i>
-      头部
+      <div class="logout"></div>
     </div>
     <div id="content">
       <router-view></router-view>
@@ -33,6 +33,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.content {
+  // background-color: #eee;
+}
 #header {
   height: 2rem;
   background-color: blue;

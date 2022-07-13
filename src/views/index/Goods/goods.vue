@@ -4,7 +4,12 @@
     <div class="search">
       <el-input v-model="searchContent" placeholder="请输入内容"></el-input>
       <el-button type="primary" @click="search(searchContent)">查询</el-button>
-      <el-button type="primary">添加</el-button>
+      <!-- 这是跳转页面的添加 -->
+      <!-- <el-button type="primary">
+        <router-link to="/addGoods" class="color"> 添加商品</router-link>
+      </el-button> -->
+      <!-- 这是跳出弹框的添加 -->
+      <el-button type="primary" @click="addGoods"> 添加商品 </el-button>
     </div>
     <!-- 数据等 -->
     <div class="information">
@@ -52,15 +57,25 @@
     <!-- 分页功能 -->
     <Pagination :total="total" :pageSize="pageSize" @changePage="changePage" />
     <!-- changePage为分页页面传过来的参数 -->
+
+    <!-- 添加商品弹出框 有三种方法  第一种父传子，在子传父  第二种 ref   第三种  children-->
+    <!-- <AddGoodsDialog ref='dialog'
+    ></AddGoodsDialog> -->
+    <AddGoodsDialog
+      :dialogVisible="dialogVisible"
+      @changeDialog="changeDialog"
+    ></AddGoodsDialog>
   </div>
 </template>
 
 <script>
 import { Message } from "element-ui";
 import Pagination from "../../../components/pagination.vue";
+import AddGoodsDialog from "./addGoodsDialog.vue";
 export default {
   components: {
     Pagination,
+    AddGoodsDialog,
   },
   data() {
     return {
@@ -68,6 +83,7 @@ export default {
       goodsList: [],
       total: 100,
       pageSize: 1,
+      dialogVisible: false,
     };
   },
   methods: {
@@ -118,6 +134,15 @@ export default {
           Message.error(error);
         });
     },
+    // 添加商品弹窗
+    addGoods() {
+      this.dialogVisible = !this.dialogVisible;
+      // this.$refs.dialog.dialogVisible = true
+    },
+    //封装为组件后的子组件传来取消弹窗
+    changeDialog() {
+      this.dialogVisible = false;
+    },
   },
   created() {
     // 第一次进入   页码设置为1
@@ -133,6 +158,9 @@ export default {
     display: flex;
     button {
       margin-left: 1rem;
+    }
+    .color {
+      color: white;
     }
   }
   .information {

@@ -1,0 +1,111 @@
+<template>
+  <div>
+    <el-dialog
+      title="添加商品"
+      :visible.sync="dialogVisible"
+      width="60%"
+      :before-close="handleClose"
+    >
+      <div class="add-goods">
+        <!-- 面包屑 -->
+        <!-- <div class="header">
+          <el-breadcrumb separator="/">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/goods' }"
+              >商品管理</el-breadcrumb-item
+            >
+            <el-breadcrumb-item>添加商品</el-breadcrumb-item>
+          </el-breadcrumb>
+        </div> -->
+        <!-- 添加页面 -->
+        <div class="content">
+          <el-form ref="info" :model="info" label-width="80px" :rules="rules">
+            <el-form-item label="类目选择">
+              <el-button type="primary">类目选择</el-button>
+            </el-form-item>
+            <el-form-item label="商品名称" prop="title">
+              <el-input v-model="info.title"></el-input>
+            </el-form-item>
+            <el-form-item label="商品价格" prop="price">
+              <el-input v-model="info.price"></el-input>
+            </el-form-item>
+            <el-form-item label="商品数量" prop="num">
+              <el-input v-model="info.num"></el-input>
+            </el-form-item>
+            <el-form-item label="商品卖点">
+              <el-input v-model="info.sellPoint"></el-input>
+            </el-form-item>
+            <!-- <el-form-item label="发布时间">
+          <el-col :span="11">
+            <el-form-item>
+              <el-date-picker
+                type="date"
+                placeholder="选择日期"
+                v-model="info.created"
+                style="width: 100%"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-form-item> -->
+            <el-form-item label="商品图片">
+              <el-button type="primary">商品图片</el-button>
+            </el-form-item>
+            <el-form-item label="活动形式">
+              <el-input type="textarea" v-model="info.descs"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="close">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ["dialogVisible"],
+  data() {
+    return {
+      info: {
+        title: "",
+        price: "",
+        num: "",
+        sellPoint: "",
+        image: "",
+        created: "",
+      },
+      rules: {
+        title: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
+        price: [{ required: true, message: "请输入商品价格", trigger: "blur" }],
+        num: [{ required: true, message: "请输入商品数量", trigger: "blur" }],
+      },
+    };
+  },
+  methods: {
+    handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then((_) => {
+          done();
+        })
+        .catch((_) => {});
+    },
+    submit() {
+      this.$emit("changeDialog");
+    },
+    close() {
+      this.$emit("changeDialog");
+    },
+  },
+};
+</script>
+
+<style lang="less" scoped>
+// .add-goods {
+//   .submit {
+//     margin-right: 2rem;
+//   }
+// }
+</style>
