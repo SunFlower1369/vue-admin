@@ -65,4 +65,24 @@ router.get('/search', (req, res) => {
   });
 });
 
+//选择类目接口
+router.get('/backend/itemCategory/selectItmeCategoryByParentId', (req, res) => {
+  const id = req.query.id || 1;
+  const sql = 'select * from category where id=?';
+  const arr = [id];
+  sqlFun(sql, arr, (result) => {
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result,
+      });
+    } else {
+      res.send({
+        status: 400,
+        msg: '暂无数据',
+      });
+    }
+  });
+});
+
 module.exports = router;

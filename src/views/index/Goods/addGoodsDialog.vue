@@ -7,21 +7,14 @@
       :before-close="handleClose"
     >
       <div class="add-goods">
-        <!-- 面包屑 -->
-        <!-- <div class="header">
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/goods' }"
-              >商品管理</el-breadcrumb-item
-            >
-            <el-breadcrumb-item>添加商品</el-breadcrumb-item>
-          </el-breadcrumb>
-        </div> -->
         <!-- 添加页面 -->
         <div class="content">
           <el-form ref="info" :model="info" label-width="80px" :rules="rules">
             <el-form-item label="类目选择">
-              <el-button type="primary">类目选择</el-button>
+              <span>{{ info.catecory }}</span>
+              <el-button type="primary" @click="selectSort" class="catecory"
+                >类目选择</el-button
+              >
             </el-form-item>
             <el-form-item label="商品名称" prop="title">
               <el-input v-model="info.title"></el-input>
@@ -60,15 +53,34 @@
         <el-button @click="close">取 消</el-button>
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
+
+      <!-- 嵌套的弹窗 -->
+      <el-dialog
+        width="40%"
+        title="类目选择"
+        :visible.sync="innerVisible"
+        append-to-body
+      >
+        <GoodsDialogTwo @TwoData="TwoData" />
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="innerVisible = false">取 消</el-button>
+          <el-button type="primary" @click="getTwoData">确 定</el-button>
+        </span>
+      </el-dialog>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import GoodsDialogTwo from "./goodsDialogTwo";
 export default {
   props: ["dialogVisible"],
+  components: {
+    GoodsDialogTwo,
+  },
   data() {
     return {
+      twoData: {},
       info: {
         title: "",
         price: "",
@@ -76,15 +88,25 @@ export default {
         sellPoint: "",
         image: "",
         created: "",
+        catecory: "",
       },
       rules: {
         title: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
         price: [{ required: true, message: "请输入商品价格", trigger: "blur" }],
         num: [{ required: true, message: "请输入商品数量", trigger: "blur" }],
       },
+      innerVisible: false,
     };
   },
   methods: {
+    TwoData(data) {
+      this.twoData = data;
+      // console.log(this.twoData);
+    },
+    getTwoData() {
+      this.innerVisible = false;
+      this.info.catecory = this.twoData.name;
+    },
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then((_) => {
@@ -98,6 +120,9 @@ export default {
     close() {
       this.$emit("changeDialog");
     },
+    selectSort() {
+      this.innerVisible = !this.innerVisible;
+    },
   },
 };
 </script>
@@ -108,4 +133,7 @@ export default {
 //     margin-right: 2rem;
 //   }
 // }
+.catecory {
+  margin-left: 2rem;
+}
 </style>

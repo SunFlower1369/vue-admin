@@ -18,5 +18,9 @@ const api = {
       params,
     });
   },
+  //类目选择
+  GetSelectCategory(params) {
+    return axios.get(base.selectCategory, { params });
+  },
 };
 export default api;
