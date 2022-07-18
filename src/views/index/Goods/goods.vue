@@ -56,7 +56,7 @@
     </div>
     <!-- 分页功能 -->
     <Pagination :total="total" :pageSize="pageSize" @changePage="changePage" />
-    <!-- changePage为分页页面传过来的参数 -->
+    <!-- changePage为分页页面传过来的参数  @changePage这里的名字必须和pagination中emit中的方法名 相同-->
 
     <!-- 添加商品弹出框 有三种方法  第一种父传子，在子传父  第二种 ref   第三种  children-->
     <!-- <AddGoodsDialog ref='dialog'
