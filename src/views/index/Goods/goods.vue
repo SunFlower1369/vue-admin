@@ -71,7 +71,7 @@
 <script>
 import { Message } from "element-ui";
 import Pagination from "../../../components/pagination.vue";
-import AddGoodsDialog from "./addGoodsDialog.vue";
+import AddGoodsDialog from "./AddGood/addGoodsDialog.vue";
 export default {
   components: {
     Pagination,

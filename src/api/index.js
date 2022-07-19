@@ -22,5 +22,9 @@ const api = {
   GetSelectCategory(params) {
     return axios.get(base.selectCategory, { params });
   },
+  //添加商品
+  InsertGoods(params) {
+    return axios.get(base.InsertGoods, { params });
+  },
 };
 export default api;

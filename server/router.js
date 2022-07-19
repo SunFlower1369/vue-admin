@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+//这是上传图片所用的
+const multer = require('multer');
+const fs = require('fs');
 
 //导入数据库
 const sqlFun = require('./mysql');
@@ -80,6 +83,61 @@ router.get('/backend/itemCategory/selectItmeCategoryByParentId', (req, res) => {
       res.send({
         status: 400,
         msg: '暂无数据',
+      });
+    }
+  });
+});
+
+// 上传图片
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './upload/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+var createFolder = function (folder) {
+  try {
+    fs.accessSync(folder);
+  } catch (e) {
+    fs.mkdirSync(folder);
+  }
+};
+var uploadFolder = './upload/';
+createFolder(uploadFolder);
+var upload = multer({ storage: storage });
+router.post('/upload', upload.single('file'), function (req, res, next) {
+  var file = req.file;
+  console.log('文件类型：%s', file.mimetype);
+  console.log('原始文件名：%s', file.originalname);
+  console.log('文件大小：%s', file.size);
+  console.log('文件保存路径：%s', file.path);
+  res.json({ res_code: '0', name: file.originalname, url: file.path });
+});
+
+//添加商品接口
+router.get('/backend/item/insertTbItem', (req, res) => {
+  var title = req.query.title || '';
+  var cid = req.query.cid || '';
+  var sellPoint = req.query.sellPoint || '';
+  var price = req.query.price || '';
+  var num = req.query.num || '';
+  var desc = req.query.desc || '';
+  var image = req.query.image || '';
+  const sql = "insert into project values (null,?,?,?,?,?,?,'',1,'','',?)";
+  var arr = [title, image, sellPoint, price, cid, num, desc];
+  sqlFun(sql, arr, (result) => {
+    if (result.affectedRows > 0) {
+      //影响行数
+      res.send({
+        status: 200,
+        msg: '添加成功',
+      });
+    } else {
+      res.send({
+        status: 500,
+        msg: '添加失败',
       });
     }
   });
