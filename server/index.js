@@ -13,5 +13,5 @@ app.use('/', router);
 
 //监听
 app.listen(1234, () => {
-  console.log(1234);
+  console.log('我启动了');
 });

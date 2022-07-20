@@ -1,15 +1,15 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Login from '../views/login.vue';
-import Index from '../views/index.vue';
-import Home from '../views/index/Home/home.vue';
-import Goods from '../views/index/Goods/goods.vue';
-import Params from '../views/index/Params/params.vue';
-import Sort from '../views/index/Sort/sort.vue';
-import Order from '../views/index/Order/order.vue';
-import OrderList from '../views/index/Order/OrderList/orderList.vue';
-import OrderReturn from '../views/index/Order/OrderReturn/orderReturn.vue';
-import AddGoods from '../views/index/Goods/addGoods.vue';
+import Login from '../views/Login.vue';
+import Index from '../views/Index.vue';
+import Home from '../views/index/Home/Home.vue';
+import Goods from '../views/index/Goods/Goods.vue';
+import Params from '../views/index/Params/Params.vue';
+import Sort from '../views/index/Sort/Sort.vue';
+import Order from '../views/index/Order/Order.vue';
+import OrderList from '../views/index/Order/OrderList/OrderList.vue';
+import OrderReturn from '../views/index/Order/OrderReturn/OrderReturn.vue';
+import AddGoods from '../views/index/Goods/AddGoods.vue';
 
 Vue.use(VueRouter);
 

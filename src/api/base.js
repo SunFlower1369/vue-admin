@@ -8,7 +8,7 @@ const base = {
   search: '/api/search', //商品搜索
   selectCategory: '/api/backend/itemCategory/selectItmeCategoryByParentId', //类目选择
   uploadImage: '/api/upload', //上传图片
-  isnertGoods: '/api/backend/item/insertTbItem', //添加商品
+  insertGoods: '/api/backend/item/insertTbItem', //添加商品
 };
 
 export default base;

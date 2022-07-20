@@ -24,7 +24,7 @@ const api = {
   },
   //添加商品
   InsertGoods(params) {
-    return axios.get(base.InsertGoods, { params });
+    return axios.get(base.insertGoods, { params });
   },
 };
 export default api;

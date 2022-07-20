@@ -39,7 +39,7 @@ export default {
       this.$refs.upload.submit();
     },
     successImage(response, file, fileList) {
-      console.log(response, file);
+      // console.log(response, file);
       let image = base.host + "/" + response.url.slice(7);
       this.$emit("uploadImage", image);
       //   console.log(response.url);

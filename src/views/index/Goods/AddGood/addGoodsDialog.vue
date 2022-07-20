@@ -28,20 +28,8 @@
             <el-form-item label="商品卖点">
               <el-input v-model="info.sellPoint"></el-input>
             </el-form-item>
-            <!-- <el-form-item label="发布时间">
-          <el-col :span="11">
-            <el-form-item>
-              <el-date-picker
-                type="date"
-                placeholder="选择日期"
-                v-model="info.created"
-                style="width: 100%"
-              ></el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-form-item> -->
             <el-form-item label="商品图片">
-              <img :src="info.image" style="width: 50px; height: 50px" />
+              <img :src="info.image" />
               <el-button
                 type="primary"
                 @click="innerVisibleImage = true"
@@ -49,8 +37,8 @@
                 >商品图片</el-button
               >
             </el-form-item>
-            <el-form-item label="活动形式">
-              <el-input type="textarea" v-model="info.descs"></el-input>
+            <el-form-item label="商品描述">
+              <WangEditor @desc="desc" :src="info.desc"></WangEditor>
             </el-form-item>
           </el-form>
         </div>
@@ -81,7 +69,7 @@
         :visible.sync="innerVisibleImage"
         append-to-body
       >
-        <GoodsDialogImageUploadVue @uploadImage="uploadImage" />
+        <GoodsDialogImageUpload @uploadImage="uploadImage" />
         <span slot="footer" class="dialog-footer">
           <el-button @click="innerVisibleImage = false">取 消</el-button>
           <el-button type="primary" @click="getImageUrl">确 定</el-button>
@@ -92,13 +80,15 @@
 </template>
 
 <script>
-import GoodsDialogTwo from "./goodsDialogTwo";
-import GoodsDialogImageUploadVue from "./goodsDialogImageUpload.vue";
+import GoodsDialogTwo from "./GoodsDialogTwo";
+import GoodsDialogImageUpload from "./GoodsDialogImageUpload";
+import WangEditor from "./WangEditor";
 export default {
   props: ["dialogVisible"],
   components: {
     GoodsDialogTwo,
-    GoodsDialogImageUploadVue,
+    GoodsDialogImageUpload,
+    WangEditor,
   },
   data() {
     return {
@@ -112,6 +102,8 @@ export default {
         image: "",
         created: "",
         catecory: "",
+        desc: "",
+        cid: "",
       },
       rules: {
         title: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
@@ -131,16 +123,22 @@ export default {
     getTwoData() {
       this.innerVisible = false;
       this.info.catecory = this.twoData.name;
+      this.info.cid = this.twoData.cid;
     },
     //接收子组件传过来的图片
     uploadImage(val) {
       this.imageData = val;
-      console.log(val);
+      // console.log(val);
     },
     //赋值给数组 图片的数据
     getImageUrl() {
       this.info.image = this.imageData;
       this.innerVisibleImage = false;
+    },
+    //接收富文本传过来的描述
+    desc(val) {
+      console.log(val); //已接收到
+      this.info.desc = val;
     },
     handleClose(done) {
       this.$confirm("确认关闭？")
@@ -150,11 +148,49 @@ export default {
         .catch((_) => {});
     },
     submit() {
-      this.$emit("changeDialog");
-      console.log(this.info); //已成功获取所有信息
-      // this.$axios.InsertGoods().then((res) => {
-      //   console.log(res);
-      // });
+      this.$refs.info.validate((valid) => {
+        if (valid) {
+          // console.log(this.info);
+          let { title, price, num, sellPoint, image, catecory, desc, cid } =
+            this.info;
+          this.$axios
+            .InsertGoods({
+              //这里是传的数据
+              title,
+              price,
+              num,
+              sellPoint,
+              image,
+              catecory,
+              desc,
+              cid,
+            })
+            .then((res) => {
+              // console.log("进来了吗");
+              if (res.data.status === 200) {
+                // console.log("进来了吗1");
+                this.close(); //关闭弹窗
+                this.$parent //调用父组件刷新数据
+                  .goodsListSelect(1);
+                //传数据给后端
+                this.$message({
+                  message: "恭喜你，添加成功！",
+                  type: "success",
+                });
+              } else {
+                this.$message.error("报错了哦");
+              }
+            })
+            .catch((error) => {
+              this.$message.error("添加出错！");
+              // console.log(error);
+              // console.log(this.info);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     close() {
       this.$emit("changeDialog");

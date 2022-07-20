@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import Menu from "../views/index/menu.vue";
-import Content from "../views/index/content.vue";
+import Menu from "./index/Menu";
+import Content from "./index/Content.vue";
 export default {
   data() {
     return {
