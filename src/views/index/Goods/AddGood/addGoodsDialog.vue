@@ -10,8 +10,8 @@
         <!-- 添加页面 -->
         <div class="content">
           <el-form ref="info" :model="info" label-width="80px" :rules="rules">
-            <el-form-item label="类目选择">
-              <span>{{ info.catecory }}</span>
+            <el-form-item label="类目选择" prop="category">
+              <span>{{ info.category }}</span>
               <el-button type="primary" @click="selectSort" class="catecory"
                 >类目选择</el-button
               >
@@ -25,11 +25,11 @@
             <el-form-item label="商品数量" prop="num">
               <el-input v-model="info.num"></el-input>
             </el-form-item>
-            <el-form-item label="商品卖点">
+            <el-form-item label="商品卖点" prop="sellPoint">
               <el-input v-model="info.sellPoint"></el-input>
             </el-form-item>
-            <el-form-item label="商品图片">
-              <img :src="info.image" />
+            <el-form-item label="商品图片" prop="image">
+              <img :src="info.image" style="width:100px;height:100px"/>
               <el-button
                 type="primary"
                 @click="innerVisibleImage = true"
@@ -37,8 +37,8 @@
                 >商品图片</el-button
               >
             </el-form-item>
-            <el-form-item label="商品描述">
-              <WangEditor @desc="desc" :src="info.desc"></WangEditor>
+            <el-form-item label="商品描述" prop="desc">
+              <WangEditor @desc="desc" :src="info.desc" ref="myEditor"></WangEditor>
             </el-form-item>
           </el-form>
         </div>
@@ -101,7 +101,7 @@ export default {
         sellPoint: "",
         image: "",
         created: "",
-        catecory: "",
+        category: "",
         desc: "",
         cid: "",
       },
@@ -122,7 +122,7 @@ export default {
     //接收子组件传过来的类目
     getTwoData() {
       this.innerVisible = false;
-      this.info.catecory = this.twoData.name;
+      this.info.category = this.twoData.name;
       this.info.cid = this.twoData.cid;
     },
     //接收子组件传过来的图片
@@ -151,7 +151,7 @@ export default {
       this.$refs.info.validate((valid) => {
         if (valid) {
           // console.log(this.info);
-          let { title, price, num, sellPoint, image, catecory, desc, cid } =
+          let { title, price, num, sellPoint, image, category, desc, cid } =
             this.info;
           this.$axios
             .InsertGoods({
@@ -161,7 +161,7 @@ export default {
               num,
               sellPoint,
               image,
-              catecory,
+              category,
               desc,
               cid,
             })
@@ -169,14 +169,19 @@ export default {
               // console.log("进来了吗");
               if (res.data.status === 200) {
                 // console.log("进来了吗1");
-                this.close(); //关闭弹窗
-                this.$parent //调用父组件刷新数据
+                this.close(); //1  关闭弹窗
+                this.$parent //2  调用父组件刷新数据
                   .goodsListSelect(1);
-                //传数据给后端
+                //3   传数据给后端
                 this.$message({
                   message: "恭喜你，添加成功！",
                   type: "success",
                 });
+                // 4   添加成功后再次点击添加还会有上次数据 因此成功后必须清空   
+                this.$refs.info.resetFields();
+                //上面清空只能清空除了富文本之外的所有数据 因为富文本提供了自己的清空方法  editor.txt.clear()
+                // 因为是访问子组件的data  所以直接绑定ref就可以访问了
+                this.$refs.myEditor.editor.txt.clear()//出现问题 是添加成功  可是也会出现添加出错
               } else {
                 this.$message.error("报错了哦");
               }

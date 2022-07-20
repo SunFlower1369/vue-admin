@@ -5,7 +5,7 @@ const mysql = require("mysql");
 const client = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "123456",
+  password: "huangwei",
   //你创建mysql数据库时候的数据库名称
   database: "admin",
   //端口  默认3306  是的话可以省略
