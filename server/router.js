@@ -120,13 +120,14 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 router.get('/backend/item/insertTbItem', (req, res) => {
   var title = req.query.title || '';
   var cid = req.query.cid || '';
+  var category = req.query.category || '';
   var sellPoint = req.query.sellPoint || '';
   var price = req.query.price || '';
   var num = req.query.num || '';
   var desc = req.query.desc || '';
   var image = req.query.image || '';
-  const sql = "insert into project values (null,?,?,?,?,?,?,'',1,'','',?)";
-  var arr = [title, image, sellPoint, price, cid, num, desc];
+  const sql = "insert into project values (null,?,?,?,?,?,?,?,'',1,'','',?)";
+  var arr = [title, category, image, sellPoint, price, cid, num, desc];
   sqlFun(sql, arr, (result) => {
     if (result.affectedRows > 0) {
       //影响行数
@@ -141,6 +142,79 @@ router.get('/backend/item/insertTbItem', (req, res) => {
       });
     }
   });
+});
+
+//删除商品的接口
+router.get('/backend/item/deleteItemById', (req, res) => {
+  var id = req.query.id;
+  var arr = [id];
+  var sql = 'delete from project where id=?';
+  sqlFun(sql, arr, (result) => {
+    if (result.affectedRows > 0) {
+      //影响行数大于0
+      res.send({
+        status: 200,
+        result,
+        msg: '删除成功！',
+      });
+    } else {
+      res.send({
+        status: 400,
+        msg: '删除失败！',
+      });
+    }
+  });
+});
+
+//编辑商品的预跟新数据接口
+router.get('/backend/item/preUpdateItem', (req, res) => {
+  var id = req.query.id;
+  var sql = 'select * from project where id=?';
+  sqlFun(sql, [id], (result) => {
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result,
+      });
+    } else {
+      res.send({
+        status: 400,
+        msg: '预更新失败',
+      });
+    }
+  });
+});
+
+//编辑商品修改商品的接口
+router.get('/backend/item/updateTbItem', (req, res) => {
+  var id = req.query.id;
+  var title = req.query.title || '';
+  var sellPoint = req.query.sellPoint || '';
+  var price = req.query.price || '';
+  var num = req.query.num || '';
+  var desc = req.query.desc || '';
+  var image = req.query.image || '';
+  var cid = req.query.cid;
+  var category = req.query.category || '';
+  var sql =
+    'update project set title=?,sellPoint=?,cid=?,price=?,num=?,descs=?,image=?,category=? where id=?';
+  sqlFun(
+    sql,
+    [title, sellPoint, cid, price, num, desc, image, id, category],
+    (result) => {
+      if (result.affectedRows > 0) {
+        res.send({
+          status: 200,
+          msg: '修改成功',
+        });
+      } else {
+        res.send({
+          status: 200,
+          msg: '修改失败',
+        });
+      }
+    }
+  );
 });
 
 module.exports = router;

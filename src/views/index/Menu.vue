@@ -3,18 +3,18 @@
     <el-row>
       <el-col>
         <el-menu
-          default-active="/"
+          :default-active="$route.path"
           class="el-menu-vertical-demo"
           background-color="skyblue"
           text-color="#fff"
-          active-text-color="red"
+          active-text-color="#ffd04b"
           router
           :collapse="isCollapse"
         >
           <el-menu-item>
             <span slot="title">伟伟的后台管理系统</span>
           </el-menu-item>
-          <el-menu-item index="/">
+          <el-menu-item index="/index">
             <i class="el-icon-menu"></i>
             <span slot="title">首页</span>
           </el-menu-item>
@@ -53,9 +53,14 @@
 <script>
 export default {
   props: ["isCollapse"],
+  mounted() {
+    //获取地址栏中的路由，设置elementui中的导航栏选中状态
+    // this.defaultActive = window.location.pathname;
+  },
   data() {
     return {
       // isCollapse: false,
+      // defaultActive: "/",
     };
   },
   methods: {},

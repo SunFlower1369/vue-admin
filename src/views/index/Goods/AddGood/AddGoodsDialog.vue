@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-dialog
-      title="添加商品"
+      :title="title"
       :visible.sync="dialogVisible"
       width="60%"
-      :before-close="handleClose"
+      :before-close="clearFrom"
     >
       <div class="add-goods">
         <!-- 添加页面 -->
@@ -29,7 +29,7 @@
               <el-input v-model="info.sellPoint"></el-input>
             </el-form-item>
             <el-form-item label="商品图片" prop="image">
-              <img :src="info.image" style="width:100px;height:100px"/>
+              <img :src="info.image" style="width: 100px; height: 100px" />
               <el-button
                 type="primary"
                 @click="innerVisibleImage = true"
@@ -38,13 +38,18 @@
               >
             </el-form-item>
             <el-form-item label="商品描述" prop="desc">
-              <WangEditor @desc="desc" :src="info.desc" ref="myEditor"></WangEditor>
+              <WangEditor
+                @desc="desc"
+                :src="info.desc"
+                ref="myEditor"
+              ></WangEditor>
             </el-form-item>
           </el-form>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="close">取 消</el-button>
+        <!-- <el-button @click="get">kankan info</el-button> -->
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
 
@@ -84,7 +89,24 @@ import GoodsDialogTwo from "./GoodsDialogTwo";
 import GoodsDialogImageUpload from "./GoodsDialogImageUpload";
 import WangEditor from "./WangEditor";
 export default {
-  props: ["dialogVisible"],
+  props:
+    // "dialogVisible",
+    // "title",
+    {
+      dialogVisible: {
+        type: Boolean,
+      },
+      title: {
+        type: String,
+        default: "添加商品",
+      },
+      rowData: {
+        type: Object,
+        default: function () {
+          return {};
+        },
+      },
+    },
   components: {
     GoodsDialogTwo,
     GoodsDialogImageUpload,
@@ -114,7 +136,18 @@ export default {
       innerVisibleImage: false,
     };
   },
+  watch: {
+    rowData(val) {
+      // console.log("使这里");
+      this.info = val; //这里是goods页面传过来的值   对应编辑操作
+      // console.log(val);
+      // this.$refs.editor.getHtml(this.info.descs);
+    },
+  },
   methods: {
+    // get() {
+    //   console.log(this.info);
+    // },
     TwoData(data) {
       this.twoData = data;
       // console.log(this.twoData);
@@ -123,6 +156,7 @@ export default {
     getTwoData() {
       this.innerVisible = false;
       this.info.category = this.twoData.name;
+      // console.log(this.info, this.twoData);
       this.info.cid = this.twoData.cid;
     },
     //接收子组件传过来的图片
@@ -137,59 +171,59 @@ export default {
     },
     //接收富文本传过来的描述
     desc(val) {
-      console.log(val); //已接收到
+      //console.log(val); //已接收到
       this.info.desc = val;
-    },
-    handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then((_) => {
-          done();
-        })
-        .catch((_) => {});
     },
     submit() {
       this.$refs.info.validate((valid) => {
         if (valid) {
-          // console.log(this.info);
-          let { title, price, num, sellPoint, image, category, desc, cid } =
+          // console.log(this.info.category);
+          let { title, cid, category, sellPoint, price, num, desc, image } =
             this.info;
           this.$axios
             .InsertGoods({
               //这里是传的数据
               title,
+              cid,
+              category,
+              sellPoint,
               price,
               num,
-              sellPoint,
-              image,
-              category,
               desc,
-              cid,
+              image,
             })
             .then((res) => {
-              // console.log("进来了吗");
+              // console.log({
+              //   title,
+              //   price,
+              //   num,
+              //   sellPoint,
+              //   image,
+              //   category,
+              //   desc,
+              //   cid,
+              // });
               if (res.data.status === 200) {
-                // console.log("进来了吗1");
-                this.close(); //1  关闭弹窗
-                this.$parent //2  调用父组件刷新数据
-                  .goodsListSelect(1);
                 //3   传数据给后端
                 this.$message({
                   message: "恭喜你，添加成功！",
                   type: "success",
                 });
-                // 4   添加成功后再次点击添加还会有上次数据 因此成功后必须清空   
-                this.$refs.info.resetFields();
-                //上面清空只能清空除了富文本之外的所有数据 因为富文本提供了自己的清空方法  editor.txt.clear()
-                // 因为是访问子组件的data  所以直接绑定ref就可以访问了
-                this.$refs.myEditor.editor.txt.clear()//出现问题 是添加成功  可是也会出现添加出错
+                this.clearFrom();
+                // this.info = {这个方法没有实现富文本清空
+                //   title: "",
+                //   price: "",
+                //   num: "",
+                //   sellPoint: "",
+                //   image: "",
+                //   created: "",
+                //   category: "",
+                //   desc: "",
+                //   cid: "",
+                // };
               } else {
                 this.$message.error("报错了哦");
               }
-            })
-            .catch((error) => {
-              this.$message.error("添加出错！");
-              // console.log(error);
-              // console.log(this.info);
             });
         } else {
           console.log("error submit!!");
@@ -202,6 +236,17 @@ export default {
     },
     selectSort() {
       this.innerVisible = !this.innerVisible;
+    },
+    clearFrom() {
+      // console.log("进来了吗1");
+      this.close(); //1  关闭弹窗
+      this.$parent //2  调用父组件刷新数据
+        .goodsListSelect(1);
+      //    添加成功后再次点击添加还会有上次数据 因此成功后必须清空
+      this.$refs.info.resetFields();
+      //上面清空只能清空除了富文本之外的所有数据 因为富文本提供了自己的清空方法  editor.txt.clear()    也可以自己手动清空赋值为空
+      // 因为是访问子组件的data  所以直接绑定ref就可以访问了
+      this.$refs.myEditor.editor.clear(); //出现问题 是添加成功  可是也会出现添加出错
     },
   },
 };

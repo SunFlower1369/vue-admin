@@ -1,13 +1,13 @@
 //连接数据库   1已经npm i mysql   2 创建连接
-const mysql = require("mysql");
+const mysql = require('mysql');
 
 //创建链接数据库
 const client = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "huangwei",
+  host: 'localhost',
+  user: 'root',
+  password: '123456',
   //你创建mysql数据库时候的数据库名称
-  database: "admin",
+  database: 'admin',
   //端口  默认3306  是的话可以省略
   //   post: "3306",
 });
