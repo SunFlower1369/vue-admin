@@ -40,16 +40,11 @@ export default Vue.extend({
     onChange(editor) {
       //   console.log("onChange", editor.gettext);
       const html = editor.getHtml();
-      //   console.log(text);
-      this.$emit("desc", html);
+      // console.log(html);
+      this.$emit("descs", html);
     },
   },
-  mounted() {
-    // 模拟 ajax 请求，异步渲染编辑器
-    // setTimeout(() => {
-    //   this.html = "<p>模拟 Ajax 异步设置内容 HTML</p>";
-    // }, 1500);
-  },
+  mounted() {},
   beforeDestroy() {
     const editor = this.editor;
     if (editor == null) return;

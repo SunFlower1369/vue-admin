@@ -37,10 +37,10 @@
                 >商品图片</el-button
               >
             </el-form-item>
-            <el-form-item label="商品描述" prop="desc">
+            <el-form-item label="商品描述" prop="descs">
               <WangEditor
-                @desc="desc"
-                :src="info.desc"
+                @descs="descs"
+                :src="info.descs"
                 ref="myEditor"
               ></WangEditor>
             </el-form-item>
@@ -117,6 +117,7 @@ export default {
       twoData: {},
       imageData: {},
       info: {
+        id: "",
         title: "",
         price: "",
         num: "",
@@ -124,7 +125,7 @@ export default {
         image: "",
         created: "",
         category: "",
-        desc: "",
+        descs: "",
         cid: "",
       },
       rules: {
@@ -140,8 +141,10 @@ export default {
     rowData(val) {
       // console.log("使这里");
       this.info = val; //这里是goods页面传过来的值   对应编辑操作
-      // console.log(val);
-      // this.$refs.editor.getHtml(this.info.descs);
+      // console.log(val.id);
+      this.$nextTick(() => {
+        this.$refs.myEditor.editor.setHtml(val.descs);
+      });
     },
   },
   methods: {
@@ -170,61 +173,85 @@ export default {
       this.innerVisibleImage = false;
     },
     //接收富文本传过来的描述
-    desc(val) {
+    descs(val) {
       //console.log(val); //已接收到
-      this.info.desc = val;
+      this.info.descs = val;
     },
     submit() {
       this.$refs.info.validate((valid) => {
         if (valid) {
-          // console.log(this.info.category);
-          let { title, cid, category, sellPoint, price, num, desc, image } =
-            this.info;
-          this.$axios
-            .InsertGoods({
-              //这里是传的数据
-              title,
-              cid,
-              category,
-              sellPoint,
-              price,
-              num,
-              desc,
-              image,
-            })
-            .then((res) => {
-              // console.log({
-              //   title,
-              //   price,
-              //   num,
-              //   sellPoint,
-              //   image,
-              //   category,
-              //   desc,
-              //   cid,
-              // });
-              if (res.data.status === 200) {
-                //3   传数据给后端
-                this.$message({
-                  message: "恭喜你，添加成功！",
-                  type: "success",
-                });
-                this.clearFrom();
-                // this.info = {这个方法没有实现富文本清空
-                //   title: "",
-                //   price: "",
-                //   num: "",
-                //   sellPoint: "",
-                //   image: "",
-                //   created: "",
-                //   category: "",
-                //   desc: "",
-                //   cid: "",
-                // };
-              } else {
-                this.$message.error("报错了哦");
-              }
-            });
+          // console.log(this.info);
+          let {
+            title,
+            cid,
+            category,
+            sellPoint,
+            price,
+            num,
+            descs,
+            image,
+            id,
+          } = this.info;
+          if (this.title === "添加商品") {
+            console.log("我再添加");
+            this.$axios
+              .InsertGoods({
+                //这里是传的数据
+                title,
+                cid,
+                category,
+                sellPoint,
+                price,
+                num,
+                descs,
+                image,
+              })
+              .then((res) => {
+                if (res.data.status === 200) {
+                  //3   传数据给后端
+                  this.$message({
+                    message: "恭喜你，添加成功！",
+                    type: "success",
+                  });
+                  this.clearFrom(); //富文本没有清空只能用富文本自带的方法
+                } else {
+                  this.$message.error("报错了哦");
+                }
+              });
+          } else {
+            this.$axios
+              .updateGoods({
+                //这里是传的数据
+                id,
+                title,
+                sellPoint,
+                cid,
+                price,
+                num,
+                descs,
+                image,
+                category,
+              })
+              .then((res) => {
+                console.log(res);
+                // console.log(this.info);
+                // console.log("我在编辑");
+                if (res.data.status === 200) {
+                  //3   传数据给后端
+                  this.$message({
+                    message: "恭喜你，编辑成功！",
+                    type: "success",
+                  });
+                  this.clearFrom(); //富文本没有清空只能用富文本自带的方法
+                } else {
+                  this.$message.error("编辑失败！");
+                }
+              })
+              .catch((err) => {
+                this.$message.error(err);
+                // console.log(err);
+              });
+          }
         } else {
           console.log("error submit!!");
           return false;
@@ -232,7 +259,21 @@ export default {
       });
     },
     close() {
+      // this.clearFrom();
       this.$emit("changeDialog");
+      // this.clearFrom();
+      this.info = {
+        title: "",
+        price: "",
+        num: "",
+        sellPoint: "",
+        image: "",
+        created: "",
+        category: "",
+        descs: "",
+        cid: "",
+      };
+      this.$refs.myEditor.editor.clear();
     },
     selectSort() {
       this.innerVisible = !this.innerVisible;
@@ -243,10 +284,21 @@ export default {
       this.$parent //2  调用父组件刷新数据
         .goodsListSelect(1);
       //    添加成功后再次点击添加还会有上次数据 因此成功后必须清空
-      this.$refs.info.resetFields();
-      //上面清空只能清空除了富文本之外的所有数据 因为富文本提供了自己的清空方法  editor.txt.clear()    也可以自己手动清空赋值为空
-      // 因为是访问子组件的data  所以直接绑定ref就可以访问了
-      this.$refs.myEditor.editor.clear(); //出现问题 是添加成功  可是也会出现添加出错
+      // this.$refs.info.resetFields();   //这里会出现问题 会闪过第一条数据因此直接用赋值的方式
+      // this.info = {
+      //   title: "",
+      //   price: "",
+      //   num: "",
+      //   sellPoint: "",
+      //   image: "",
+      //   created: "",
+      //   category: "",
+      //   descs: "",
+      //   cid: "",
+      // };
+      // //上面清空只能清空除了富文本之外的所有数据 因为富文本提供了自己的清空方法  editor.txt.clear()    也可以自己手动清空赋值为空
+      // // 因为是访问子组件的data  所以直接绑定ref就可以访问了
+      // this.$refs.myEditor.editor.clear(); //出现问题 是添加成功  可是也会出现添加出错
     },
   },
 };

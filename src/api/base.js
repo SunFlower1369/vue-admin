@@ -10,7 +10,7 @@ const base = {
   uploadImage: '/api/upload', //上传图片
   insertGoods: '/api/backend/item/insertTbItem', //添加商品
   deleteGoods: '/api/backend/item/deleteItemById', //删除商品
-  updateGoods: '/api//backend/item/updateTbItem', //编辑商品
+  updateGoods: '/api/backend/item/updateTbItem', //编辑商品
 };
 
 export default base;

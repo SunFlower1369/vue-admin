@@ -166,25 +166,6 @@ router.get('/backend/item/deleteItemById', (req, res) => {
   });
 });
 
-//编辑商品的预跟新数据接口
-router.get('/backend/item/preUpdateItem', (req, res) => {
-  var id = req.query.id;
-  var sql = 'select * from project where id=?';
-  sqlFun(sql, [id], (result) => {
-    if (result.length > 0) {
-      res.send({
-        status: 200,
-        result,
-      });
-    } else {
-      res.send({
-        status: 400,
-        msg: '预更新失败',
-      });
-    }
-  });
-});
-
 //编辑商品修改商品的接口
 router.get('/backend/item/updateTbItem', (req, res) => {
   var id = req.query.id;
@@ -192,29 +173,29 @@ router.get('/backend/item/updateTbItem', (req, res) => {
   var sellPoint = req.query.sellPoint || '';
   var price = req.query.price || '';
   var num = req.query.num || '';
-  var desc = req.query.desc || '';
+  var descs = req.query.descs || '';
   var image = req.query.image || '';
-  var cid = req.query.cid;
+  var cid = req.query.cid || '';
   var category = req.query.category || '';
+  var arr = [title, sellPoint, cid, price, num, descs, image, category, id];
   var sql =
     'update project set title=?,sellPoint=?,cid=?,price=?,num=?,descs=?,image=?,category=? where id=?';
-  sqlFun(
-    sql,
-    [title, sellPoint, cid, price, num, desc, image, id, category],
-    (result) => {
-      if (result.affectedRows > 0) {
-        res.send({
-          status: 200,
-          msg: '修改成功',
-        });
-      } else {
-        res.send({
-          status: 200,
-          msg: '修改失败',
-        });
-      }
+  sqlFun(sql, arr, (result) => {
+    if (result.affectedRows > 0) {
+      res.send({
+        status: 200,
+        msg: '修改成功',
+        sql: this.sql,
+      });
+    } else {
+      res.send({
+        status: 500,
+        msg: '修改失败',
+        sql: '',
+      });
     }
-  );
+  });
+  return sql;
 });
 
 module.exports = router;
