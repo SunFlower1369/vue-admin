@@ -16,7 +16,8 @@
           </el-menu-item>
           <el-menu-item index="/index">
             <i class="el-icon-menu"></i>
-            <span slot="title">首页</span>
+            <span slot="title">{{ $t("navMenu.home") }} </span>
+            <!-- {{ $t('navMenu.home') }} -->
           </el-menu-item>
           <el-menu-item index="/goods">
             <i class="el-icon-document"></i>

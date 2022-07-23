@@ -248,7 +248,7 @@ export default {
                 }
               })
               .catch((err) => {
-                this.$message.error(err);
+                this.$message.error('err');
                 // console.log(err);
               });
           }

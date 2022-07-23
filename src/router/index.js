@@ -15,28 +15,17 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '',
-    redirect: '/index',
-    component: Index,
-  },
-  {
     path: '/login',
-    component: Login,
+    component: Login
   },
   {
-    path: '/index',
+    path: '',
     component: Index,
+    meta: { isLogin: true },
     children: [
-      // {
-      //   path:'/index',
-      //   redirect:'/index/home',
-      //   component:Home
-      // },
       {
-        // path: '/home',
         path: '/',
         component: Home,
-        // redirect: '/',
       },
       {
         path: '/goods',
@@ -78,5 +67,24 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
+
+//路由元信息   拦截掉没有登录的 
+router.beforeEach((to, form, next) => {
+  // console.log(to);
+  if (to.matched.some(ele => ele.meta.isLogin)) {
+    //判断用户是否登录
+    let token = ''
+    if (token) {
+      next()
+    } else {
+      console.log('您还没有登录哟');
+      next('/login')
+    }
+  } else{
+    console.log('..................');
+    next()
+  }
+})
 
 export default router;
