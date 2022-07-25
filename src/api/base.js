@@ -11,6 +11,7 @@ const base = {
   insertGoods: '/api/backend/item/insertTbItem', //添加商品
   deleteGoods: '/api/backend/item/deleteItemById', //删除商品
   updateGoods: '/api/backend/item/updateTbItem', //编辑商品
+  login: '/api/login', //登录接口
 };
 
 export default base;

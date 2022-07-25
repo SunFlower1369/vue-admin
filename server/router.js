@@ -7,10 +7,78 @@ const fs = require('fs');
 //导入数据库
 const sqlFun = require('./mysql');
 
+//导入模块  jwt  token
+const jwt = require('jsonwebtoken');
+const jwtSecret = require('./jwtSecret');
+
 //创建路由接口
 // router.get("/", (req, res) => {
 //   res.send("成功没");
 // });
+
+//登录的接口
+router.post('/login', (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  //创建sql语句
+  const sql = 'select * from user where username=? and password=?';
+  //arr参数
+  const arr = [username, password];
+  //调用数据库查询方法
+  sqlFun(sql, arr, (result) => {
+    if (result.length > 0) {
+      //查询到表示登录成功
+
+      //生成登录状态token
+      let token = jwt.sign(
+        {
+          id: result[0].id,
+          username: result[0].username,
+        },
+        jwtSecret.secret,
+        //配置过期时间
+        {
+          expiresIn: 20 * 1,
+        }
+      );
+      res.send({
+        status: 200,
+        token, //把生成的token返回
+        msg: '登录成功',
+      });
+    } else {
+      //没查询到，表示登录失败
+      res.send({
+        status: 400,
+        msg: '用户名密码错误',
+        // token,
+      });
+    }
+  });
+});
+
+//注册的接口
+router.post('/register', (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  const email = req.body.email;
+  const arr = [username, password, email];
+  const sql = 'insert into user values(null,?,?,?)';
+  sqlFun(sql, arr, (result) => {
+    //返回的是影响行数
+    if (result.affectedRows > 0) {
+      res.send({
+        status: 200,
+        msg: '注册成功',
+      });
+    } else {
+      res.send({
+        status: 400,
+        msg: '注册失败',
+      });
+    }
+  });
+});
 
 /**
  * 获取分页  {total：'', arr:[{}],pagesize:8}

@@ -233,7 +233,7 @@ export default {
                 category,
               })
               .then((res) => {
-                console.log(res);
+                // console.log(res);
                 // console.log(this.info);
                 // console.log("我在编辑");
                 if (res.data.status === 200) {
@@ -248,7 +248,7 @@ export default {
                 }
               })
               .catch((err) => {
-                this.$message.error('err');
+                this.$message.error("err");
                 // console.log(err);
               });
           }

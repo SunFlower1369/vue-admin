@@ -14,7 +14,7 @@
           <el-menu-item>
             <span slot="title">伟伟的后台管理系统</span>
           </el-menu-item>
-          <el-menu-item index="/index">
+          <el-menu-item index="/home">
             <i class="el-icon-menu"></i>
             <span slot="title">{{ $t("navMenu.home") }} </span>
             <!-- {{ $t('navMenu.home') }} -->

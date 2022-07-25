@@ -14,7 +14,7 @@
 
 <script>
 import Menu from "./index/Menu";
-import Content from "./index/Content.vue"
+import Content from "./index/Content.vue";
 export default {
   data() {
     return {

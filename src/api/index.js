@@ -3,7 +3,15 @@
  */
 import axios from 'axios';
 import base from './base';
+//用来传参  post不能直接传参
+import qs from 'querystring';
+
 const api = {
+  //登录
+  login(params) {
+    // console.log(params);
+    return axios.post(base.login, qs.stringify(params));
+  },
   //商品列表
   getGoodsList(params) {
     //犯了个巨大错误  方法都没有写参数   怎么把参数传进来
