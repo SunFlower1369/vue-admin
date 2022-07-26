@@ -82,9 +82,9 @@
 </template>
 
 <script>
-import { Message } from "element-ui";
-import Pagination from "../../../components/Pagination";
-import AddGoodsDialog from "./AddGood/AddGoodsDialog.vue";
+import { Message } from 'element-ui';
+import Pagination from '../../../components/Pagination.vue';
+import AddGoodsDialog from './AddGood/AddGoodsDialog.vue';
 export default {
   components: {
     Pagination,
@@ -92,12 +92,12 @@ export default {
   },
   data() {
     return {
-      searchContent: "",
+      searchContent: '',
       goodsList: [],
       total: 100,
       pageSize: 1,
       dialogVisible: false,
-      title: "添加商品",
+      title: '添加商品',
       rowData: {},
     };
   },
@@ -105,7 +105,7 @@ export default {
     //编辑操作
     handleEdit(index, row) {
       this.dialogVisible = true;
-      this.title = "编辑商品";
+      this.title = '编辑商品';
       this.rowData = row;
       // console.log(row);
       // this.$refs.addGoodsDialog.info = row; // 1.用refs直接读取子组件的数据   2.也可以使用监听器(必须先把值传递过去)this.rowData = row  在addgoods页面
@@ -136,24 +136,24 @@ export default {
     //删除操作   已完成
     handleDelete(index, row) {
       // console.log(row);
-      this.$confirm("此操作将永久删除该商品, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.$axios.DeleteGoods({ id: row.id }).then((res) => {
             // console.log(res.data);
             if (res.data.status === 200) {
               this.$message({
-                type: "success",
-                message: "删除成功!",
+                type: 'success',
+                message: '删除成功!',
               });
               this.goodsListSelect();
             } else {
               this.$message({
-                type: "error",
-                message: "删除失败!",
+                type: 'error',
+                message: '删除失败!',
               });
             }
           });
@@ -164,8 +164,8 @@ export default {
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "已取消删除",
+            type: 'info',
+            message: '已取消删除',
           });
         });
     },
@@ -192,7 +192,7 @@ export default {
     //更换页码的时候调用goodsListSelect方法    已完成
     changePage(num) {
       this.goodsListSelect(num);
-      // console.log("切换了吗");
+      console.log('切换了吗');
     },
     //搜索操作    已完成
     search(val) {
@@ -206,7 +206,7 @@ export default {
           if (res.data.status === 200) {
             this.goodsList = res.data.result;
           } else if (res.data.status === 400) {
-            Message.error("没有查询到相关数据哦");
+            Message.error('没有查询到相关数据哦');
           }
         })
         .catch((error) => {
@@ -217,7 +217,7 @@ export default {
     // 添加商品弹窗    已完成
     addGoods() {
       this.dialogVisible = !this.dialogVisible;
-      this.title = "添加商品";
+      this.title = '添加商品';
       // this.$refs.dialog.dialogVisible = true
     },
     //封装为组件后的子组件传来取消弹窗

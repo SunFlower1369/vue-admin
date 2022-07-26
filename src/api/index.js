@@ -42,5 +42,13 @@ const api = {
   updateGoods(params) {
     return axios.get(base.updateGoods, { params });
   },
+  //规格参数
+  getParams(params) {
+    return axios.get(base.params, { params });
+  },
+  //规格参数搜索
+  searchParams(params) {
+    return axios.get(base.searchParams, { params });
+  },
 };
 export default api;

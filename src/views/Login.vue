@@ -27,24 +27,24 @@
 </template>
 <script>
 //解码  传过来的是token
-import jwt from "jwt-decode";
-import { mapMutations } from "vuex";
+import jwt from 'jwt-decode';
+import { mapMutations } from 'vuex';
 export default {
   data() {
     return {
       loginForm: {
-        username: "",
-        password: "",
+        username: '',
+        password: '',
       },
       rules: {
-        username: [{ required: true, message: "请输入账号", trigger: "blur" }],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
       },
     };
   },
   methods: {
     // ...mapMutations('这里是模块名字',['这里是方法名']),模块名在vuex modules中   方法名在相应模块名中
-    ...mapMutations("Login", ["setUser"]),
+    ...mapMutations('Login', ['setUser']),
 
     submitForm(loginForm) {
       this.$refs[loginForm].validate((valid) => {
@@ -52,7 +52,7 @@ export default {
           let { username, password } = this.loginForm;
           this.$axios.login({ username, password }).then((res) => {
             if (res.data.status === 200) {
-              console.log(res.data);
+              // console.log(res.data);
               //既然成功了 下面进行的步骤  1  储存信息（持久化  vuex）   2 进行跳转  3 首页上方进行显示
               let login = {
                 username: username,
@@ -61,15 +61,15 @@ export default {
               // console.log(login);
               this.setUser(login);
               //储存到本地 就是vuex中     这里存了之后      setItem后还需要在main中读取token要不然会拦截
-              localStorage.setItem("userInfo", JSON.stringify(login));
+              localStorage.setItem('userInfo', JSON.stringify(login));
               //跳转
-              this.$router.push("/home");
+              this.$router.push('/home');
             } else {
-              this.$message.error("账号或者密码错误");
+              this.$message.error('账号或者密码错误');
             }
           });
         } else {
-          console.log("error submit!!");
+          console.log('error submit!!');
           return false;
         }
       });

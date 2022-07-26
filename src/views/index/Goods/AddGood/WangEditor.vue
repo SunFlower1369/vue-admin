@@ -18,18 +18,18 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
+import Vue from 'vue';
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 
 export default Vue.extend({
   components: { Editor, Toolbar },
   data() {
     return {
       editor: null,
-      html: "",
+      html: '',
       toolbarConfig: {},
-      editorConfig: { placeholder: "请输入内容..." },
-      mode: "default", // or 'simple'
+      editorConfig: { placeholder: '请输入内容...' },
+      mode: 'default', // or 'simple'
     };
   },
   methods: {
@@ -41,7 +41,7 @@ export default Vue.extend({
       //   console.log("onChange", editor.gettext);
       const html = editor.getHtml();
       // console.log(html);
-      this.$emit("descs", html);
+      this.$emit('descs', html);
     },
   },
   mounted() {},

@@ -16,15 +16,15 @@ export default {
   data() {
     return {
       props: {
-        label: "name",
-        children: "zones",
-        isLeaf: "leaf",
+        label: 'name',
+        children: 'zones',
+        isLeaf: 'leaf',
       },
     };
   },
   methods: {
     getData(data, node) {
-      this.$emit("TwoData", data);
+      this.$emit('TreeData', data);
     },
     selectCategory() {
       this.$axios
@@ -70,23 +70,9 @@ export default {
             // return resolve([{ name: "region" }]);
           });
       }
-      // setTimeout(() => {
-      //   const data = [
-      //     {
-      //       name: "leaf",
-      //       leaf: true,
-      //     },
-      //     {
-      //       name: "zone",
-      //     },
-      //   ];
-
-      //   resolve(data);
-      // }, 500);
     },
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

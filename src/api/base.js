@@ -12,6 +12,8 @@ const base = {
   deleteGoods: '/api/backend/item/deleteItemById', //删除商品
   updateGoods: '/api/backend/item/updateTbItem', //编辑商品
   login: '/api/login', //登录接口
+  params: '/api/backend/itemParam/selectItemParamAll', //规格参数
+  searchParams: '/api//params/search', //规格参数搜索
 };
 
 export default base;

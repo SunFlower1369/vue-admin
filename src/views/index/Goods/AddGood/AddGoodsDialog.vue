@@ -60,7 +60,7 @@
         :visible.sync="innerVisible"
         append-to-body
       >
-        <GoodsDialogTwo @TwoData="TwoData" />
+        <Tree @TreeData="TwoData" />
         <span slot="footer" class="dialog-footer">
           <el-button @click="innerVisible = false">取 消</el-button>
           <el-button type="primary" @click="getTwoData">确 定</el-button>
@@ -85,9 +85,9 @@
 </template>
 
 <script>
-import GoodsDialogTwo from "./GoodsDialogTwo";
-import GoodsDialogImageUpload from "./GoodsDialogImageUpload";
-import WangEditor from "./WangEditor";
+import Tree from '../../../../components/CategoryTree.vue';
+import GoodsDialogImageUpload from './GoodsDialogImageUpload';
+import WangEditor from './WangEditor';
 export default {
   props:
     // "dialogVisible",
@@ -98,7 +98,7 @@ export default {
       },
       title: {
         type: String,
-        default: "添加商品",
+        default: '添加商品',
       },
       rowData: {
         type: Object,
@@ -108,7 +108,7 @@ export default {
       },
     },
   components: {
-    GoodsDialogTwo,
+    Tree,
     GoodsDialogImageUpload,
     WangEditor,
   },
@@ -117,21 +117,21 @@ export default {
       twoData: {},
       imageData: {},
       info: {
-        id: "",
-        title: "",
-        price: "",
-        num: "",
-        sellPoint: "",
-        image: "",
-        created: "",
-        category: "",
-        descs: "",
-        cid: "",
+        id: '',
+        title: '',
+        price: '',
+        num: '',
+        sellPoint: '',
+        image: '',
+        created: '',
+        category: '',
+        descs: '',
+        cid: '',
       },
       rules: {
-        title: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
-        price: [{ required: true, message: "请输入商品价格", trigger: "blur" }],
-        num: [{ required: true, message: "请输入商品数量", trigger: "blur" }],
+        title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+        price: [{ required: true, message: '请输入商品价格', trigger: 'blur' }],
+        num: [{ required: true, message: '请输入商品数量', trigger: 'blur' }],
       },
       innerVisible: false,
       innerVisibleImage: false,
@@ -192,8 +192,8 @@ export default {
             image,
             id,
           } = this.info;
-          if (this.title === "添加商品") {
-            console.log("我再添加");
+          if (this.title === '添加商品') {
+            console.log('我再添加');
             this.$axios
               .InsertGoods({
                 //这里是传的数据
@@ -210,12 +210,12 @@ export default {
                 if (res.data.status === 200) {
                   //3   传数据给后端
                   this.$message({
-                    message: "恭喜你，添加成功！",
-                    type: "success",
+                    message: '恭喜你，添加成功！',
+                    type: 'success',
                   });
                   this.clearFrom(); //富文本没有清空只能用富文本自带的方法
                 } else {
-                  this.$message.error("报错了哦");
+                  this.$message.error('报错了哦');
                 }
               });
           } else {
@@ -239,39 +239,39 @@ export default {
                 if (res.data.status === 200) {
                   //3   传数据给后端
                   this.$message({
-                    message: "恭喜你，编辑成功！",
-                    type: "success",
+                    message: '恭喜你，编辑成功！',
+                    type: 'success',
                   });
                   this.clearFrom(); //富文本没有清空只能用富文本自带的方法
                 } else {
-                  this.$message.error("编辑失败！");
+                  this.$message.error('编辑失败！');
                 }
               })
               .catch((err) => {
-                this.$message.error("err");
+                this.$message.error('err');
                 // console.log(err);
               });
           }
         } else {
-          console.log("error submit!!");
+          console.log('error submit!!');
           return false;
         }
       });
     },
     close() {
       // this.clearFrom();
-      this.$emit("changeDialog");
+      this.$emit('changeDialog');
       // this.clearFrom();
       this.info = {
-        title: "",
-        price: "",
-        num: "",
-        sellPoint: "",
-        image: "",
-        created: "",
-        category: "",
-        descs: "",
-        cid: "",
+        title: '',
+        price: '',
+        num: '',
+        sellPoint: '',
+        image: '',
+        created: '',
+        category: '',
+        descs: '',
+        cid: '',
       };
       this.$refs.myEditor.editor.clear();
     },

@@ -16,17 +16,24 @@
           </el-menu-item>
           <el-menu-item index="/home">
             <i class="el-icon-menu"></i>
-            <span slot="title">{{ $t("navMenu.home") }} </span>
+            <span slot="title">{{ $t('navMenu.home') }} </span>
             <!-- {{ $t('navMenu.home') }} -->
           </el-menu-item>
           <el-menu-item index="/goods">
             <i class="el-icon-document"></i>
             <span slot="title">商品管理</span>
           </el-menu-item>
-          <el-menu-item index="/params">
-            <i class="el-icon-setting"></i>
-            <span slot="title">规格参数</span>
-          </el-menu-item>
+
+          <el-submenu index="/params">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>规格参数</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/params/paramsInfo">规格与包装</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+
           <el-menu-item index="/sort">
             <i class="el-icon-setting"></i>
             <span slot="title">广告分类</span>
@@ -53,7 +60,7 @@
 
 <script>
 export default {
-  props: ["isCollapse"],
+  props: ['isCollapse'],
   mounted() {
     //获取地址栏中的路由，设置elementui中的导航栏选中状态
     // this.defaultActive = window.location.pathname;

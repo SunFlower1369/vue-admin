@@ -10,6 +10,7 @@ import Order from '../views/index/Order/Order.vue';
 import OrderList from '../views/index/Order/OrderList/OrderList.vue';
 import OrderReturn from '../views/index/Order/OrderReturn/OrderReturn.vue';
 import AddGoods from '../views/index/Goods/AddGoods.vue';
+import ParamsInfo from '../views/index/Params/ParamsInfo/ParamsInfo.vue';
 
 Vue.use(VueRouter);
 
@@ -38,6 +39,13 @@ const routes = [
       {
         path: '/params',
         component: Params,
+        redirect: '/params/paramsInfo',
+        children: [
+          {
+            path: 'paramsInfo',
+            component: ParamsInfo,
+          },
+        ],
       },
       {
         path: '/sort',

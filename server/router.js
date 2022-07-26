@@ -266,4 +266,177 @@ router.get('/backend/item/updateTbItem', (req, res) => {
   return sql;
 });
 
+//规格参数
+router.get('/backend/itemParam/selectItemParamAll', (req, res) => {
+  var page = req.query.page || 1;
+  let sqlLen = 'select * from params ';
+  sqlFun(sqlLen, null, (data) => {
+    var sql =
+      'select * from params  order by id desc limit 10 offset ' +
+      (page - 1) * 10;
+    let len = data.length;
+    sqlFun(sql, null, (result) => {
+      if (result.length > 0) {
+        res.send({
+          status: 200,
+          result,
+          pagesize: 10,
+          total: len,
+        });
+      } else {
+        res.send({
+          status: 400,
+          msg: '暂无数据',
+        });
+      }
+    });
+  });
+});
+
+//规格参数模糊搜索接口
+router.get('/params/search', (req, res) => {
+  var page = req.query.page || 1;
+  const search = req.query.search;
+  //concat(`title`,`sellPoint`,`descs`) like "%' + search + '%"  根据search来搜索
+  // order by id desc ; 搜索到的数据倒叙
+  //limit 10 offset ' + (page-1)*10;  根据给的偏移量page只显示10条数据，page=1，就是1-10；page=2，就是11-20
+  const sql =
+    'select * from params where concat(`id`,`itemCatId`,`paramData`) like "%' +
+    search +
+    '%"' +
+    ' order by id desc limit 10 offset ' +
+    (page - 1) * 10;
+  sqlFun(sql, [search, page], (result) => {
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result,
+      });
+    } else {
+      res.send({
+        status: 400,
+        msg: '暂无数据',
+      });
+    }
+  });
+});
+
+//添加规格参数接口
+router.get('/backend/itemParam/insertItemParam', (req, res) => {
+  var itemCatId = req.query.itemCatId;
+  var paramData = req.query.paramData;
+  sql = 'insert into params values(null,?,?)';
+  sqlFun(sql, [itemCatId, paramData], (result) => {
+    if (result.affectedRows > 0) {
+      //影响行数大于0
+      res.send({
+        status: 200,
+        msg: '添加成功！',
+      });
+    } else {
+      res.send({
+        status: 400,
+        msg: '添加失败！',
+      });
+    }
+  });
+});
+
+//删除规格参数
+router.get('/params/delete', (req, res) => {
+  var id = req.query.id;
+  var sql = 'delete from params where id=?';
+  sqlFun(sql, [id], (result) => {
+    if (result.affectedRows > 0) {
+      res.send({
+        status: 200,
+        msg: '删除成功！',
+      });
+    } else {
+      res.send({
+        status: 400,
+        msg: '删除失败！',
+      });
+    }
+  });
+});
+
+//获取内容分类-
+router.get('/content/title', (req, res) => {
+  var sql = 'select * from content';
+  sqlFun(sql, null, (result) => {
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result,
+      });
+    } else {
+      res.send({
+        status: 400,
+        msg: '读取失败',
+      });
+    }
+  });
+});
+
+//删除内容分类
+router.get('/content/delete', (req, res) => {
+  var pid = req.query.pid;
+  var sql = 'delete from content where pid=?';
+  sqlFun(sql, [pid], (result) => {
+    if (result.affectedRows > 0) {
+      res.send({
+        status: 200,
+        msg: '删除成功',
+      });
+    } else {
+      res.send({
+        status: 400,
+        msg: '删除失败',
+      });
+    }
+  });
+});
+
+//添加内容分类
+router.get('/content/insert', (req, res) => {
+  var name = req.query.name;
+  var pid = Math.floor(Math.random() * 100000); //随机生成的5位数
+  var id = Math.floor(Math.random() * 100000);
+  var sql = 'insert into content values(?,?,?)';
+  sqlFun(sql, [id, name, pid], (result) => {
+    if (result.affectedRows > 0) {
+      res.send({
+        status: 200,
+        msg: '添加成功',
+      });
+    } else {
+      res.send({
+        status: 400,
+        msg: '添加失败',
+      });
+    }
+  });
+});
+
+//根据内容分类pid查询contentinfo
+router.get('/content/contentInfo', (req, res) => {
+  var pid = req.query.pid;
+  var sql = 'select * from contentinfo where pid=?';
+  console.log(pid);
+  sqlFun(sql, [pid], (result) => {
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result,
+      });
+    } else {
+      res.send({
+        status: 400,
+        msg: '暂无数据',
+      });
+    }
+  });
+});
+
 module.exports = router;
