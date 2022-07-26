@@ -3,29 +3,25 @@
     <el-form
       :model="dynamicValidateForm"
       ref="dynamicValidateForm"
-      label-width="100px"
-      class="demo-dynamic"
+      class="demo-dynamic add"
     >
-      <!-- <el-form-item
+      <el-form-item
         v-for="(domain, index) in dynamicValidateForm.domains"
-        :label="'域名' + index"
+        :label="'' + index"
         :key="domain.key"
         :prop="'domains.' + index + '.value'"
         :rules="{
           required: true,
-          message: '域名不能为空',
+          message: '不能为空',
           trigger: 'blur',
         }"
       >
-        <el-input v-model="domain.value"></el-input
-        ><el-button @click.prevent="removeDomain(domain)">删除</el-button>
-      </el-form-item> -->
+        <el-input v-model="domain.value" class="input-add"></el-input>
+        <el-button @click.prevent="removeDomain(domain)">删除</el-button>
+      </el-form-item>
+
       <el-form-item>
-        <!-- <el-button type="primary" @click="submitForm('dynamicValidateForm')"
-          >提交</el-button
-        > -->
         <el-button @click="addDomain">新增域名</el-button>
-        <!-- <el-button @click="resetForm('dynamicValidateForm')">重置</el-button> -->
       </el-form-item>
     </el-form>
   </div>
@@ -75,4 +71,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="less" scoped>
+.add {
+  margin: 0.5rem 0;
+  .input-add {
+    width: 70%;
+    margin-right: 1rem;
+  }
+}
+</style>

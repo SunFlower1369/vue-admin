@@ -26,6 +26,7 @@
         {{ treeData.name }}
 
         <!-- 添加规格 -->
+        <AddCategory />
 
         <span slot="footer" class="dialog-footer"
           ><el-button type="primary" @click="addCategory" :disabled="isDisabled"
@@ -40,9 +41,11 @@
 
 <script>
 import Tree from '../../../../components/CategoryTree.vue';
+import AddCategory from './AddCategory.vue';
 export default {
   components: {
     Tree,
+    AddCategory,
   },
   data() {
     return {
