@@ -26,13 +26,67 @@
         {{ treeData.name }}
 
         <!-- 添加规格 -->
-        <AddCategory />
-
-        <span slot="footer" class="dialog-footer"
-          ><el-button type="primary" @click="addCategory" :disabled="isDisabled"
-            >确定</el-button
+        <div>
+          <el-button @click="addDomain" class="add">新增域名</el-button>
+          <hr />
+          <el-form
+            :model="dynamicValidateForm"
+            ref="dynamicValidateForm"
+            class="demo-dynamic"
           >
-          <el-button @click="resetForm('dynamicValidateForm')">重置</el-button>
+            <el-form-item
+              v-for="(item, index) in dynamicValidateForm.addCategory"
+              :label="item.title"
+              :key="index"
+              :prop="item.value"
+              :rules="{
+                required: true,
+                message: '不能为空',
+                trigger: 'blur',
+              }"
+            >
+              <div class="form detail">
+                <el-input v-model="item.title"></el-input>
+                <el-button @click.prevent="addDetail(index)"
+                  >增加详情</el-button
+                >
+                <el-button @click.prevent="removeDomain(item)">删除</el-button>
+              </div>
+
+              <!-- 这里是详情的form -->
+              <div>
+                <el-form-item
+                  v-for="(child, i) in item.children"
+                  :label="child.title"
+                  :key="i"
+                  :prop="child.title"
+                  :rules="{
+                    required: true,
+                    message: '不能为空',
+                    trigger: 'blur',
+                  }"
+                  class="demo-dynamic"
+                  label-width="120px"
+                >
+                  <div class="form">
+                    <el-input v-model="child.title"></el-input>
+                    <el-button @click.prevent="removeChildDomain(index, i)"
+                      >删除</el-button
+                    >
+                  </div>
+                </el-form-item>
+              </div>
+            </el-form-item>
+          </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer"
+          ><el-button
+            type="primary"
+            @click="submitCategory('dynamicValidateForm', 'treeData')"
+            :disabled="isDisabled"
+            >提交</el-button
+          >
+          <el-button @click="cancel">取消</el-button>
         </span>
       </el-dialog>
     </el-dialog>
@@ -58,6 +112,9 @@ export default {
         id: '',
         cid: '',
       },
+      dynamicValidateForm: {
+        addCategory: [],
+      },
     };
   },
   methods: {
@@ -69,18 +126,92 @@ export default {
     getData(val) {
       this.isDisabled = false;
       this.treeData = val;
-      //   console.log(this.treeData);
+      console.log(this.treeData);
     },
-    //二级弹框的添加类目
-    addCategory() {},
-    //这里是重置二级弹框内容
-    resetForm(formName) {
-      if (this.$refs[formName] !== undefined) {
-        this.$refs[formName].resetFields();
+    //增加参数配置
+    addDomain() {
+      this.dynamicValidateForm.addCategory.push({
+        value: '',
+        title: '',
+        children: [],
+      });
+    },
+    //增加详情按钮
+    addDetail(index) {
+      this.dynamicValidateForm.addCategory[index].children.push({
+        title: '',
+        value: '',
+      });
+    },
+    //删除详情
+    removeChildDomain(index, i) {
+      // console.log(i, index);
+      let one = this.dynamicValidateForm.addCategory[index].children.indexOf[i];
+      // console.log('one');
+      if (one !== -1) {
+        this.dynamicValidateForm.addCategory[index].children.splice(i, 1);
       }
+    },
+    removeDomain(item) {
+      var index = this.dynamicValidateForm.addCategory.indexOf(item);
+      if (index !== -1) {
+        this.dynamicValidateForm.addCategory.splice(index, 1);
+      }
+    },
+    //提交
+    submitCategory(dynamicValidateForm) {
+      this.$refs[dynamicValidateForm].validate((valid) => {
+        if (valid) {
+          // console.log(this.dynamicValidateForm.addCategory);   itemCatId, paramData, paramName
+          this.$axios
+            .insertParams({
+              itemCatId: this.treeData.cid,
+              paramName: this.treeData.name,
+              paramData: JSON.stringify(this.dynamicValidateForm.addCategory),
+            })
+            .then((res) => {
+              // console.log(dynamicValidateForm);
+              // console.log(res);
+              if (res.data.status === 200) {
+                this.$message({
+                  message: '恭喜你，添加成功',
+                  type: 'success',
+                });
+                (this.dialogVisible = false), (this.innerVisible = false);
+                this.dynamicValidateForm.addCategory = [];
+                this.$parent.getParamsInfo(1);
+                // this.resetForm();
+              } else {
+                this.$message({
+                  message: '添加出错',
+                  type: 'error',
+                });
+              }
+            });
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    cancel() {
+      this.innerVisible = false;
     },
   },
 };
 </script>
 
-<style></style>
+<style lang="less" scoped>
+.form {
+  display: flex;
+  button {
+    margin-left: 0.5rem;
+  }
+}
+.add {
+  margin: 0.5rem 0;
+}
+.demo-dynamic {
+  margin: 0.5rem 0;
+}
+</style>

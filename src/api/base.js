@@ -14,6 +14,7 @@ const base = {
   login: '/api/login', //登录接口
   params: '/api/backend/itemParam/selectItemParamAll', //规格参数
   searchParams: '/api//params/search', //规格参数搜索
+  insertParams: '/api/backend/itemParam/insertItemParam', //添加规格参数
 };
 
 export default base;

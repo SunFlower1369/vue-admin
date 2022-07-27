@@ -50,5 +50,9 @@ const api = {
   searchParams(params) {
     return axios.get(base.searchParams, { params });
   },
+  //添加规格参数
+  insertParams(params) {
+    return axios.get(base.insertParams, { params });
+  },
 };
 export default api;

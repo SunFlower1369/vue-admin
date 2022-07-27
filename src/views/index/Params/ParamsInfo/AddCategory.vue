@@ -1,27 +1,52 @@
 <template>
   <div>
+    <el-button @click="addDomain" class="add">新增域名</el-button>
+    <hr />
     <el-form
       :model="dynamicValidateForm"
       ref="dynamicValidateForm"
-      class="demo-dynamic add"
+      class="demo-dynamic"
     >
       <el-form-item
-        v-for="(domain, index) in dynamicValidateForm.domains"
-        :label="'' + index"
-        :key="domain.key"
-        :prop="'domains.' + index + '.value'"
+        v-for="(item, index) in dynamicValidateForm.addCategory"
+        :label="item.title"
+        :key="index"
+        :prop="item.value"
         :rules="{
           required: true,
           message: '不能为空',
           trigger: 'blur',
         }"
       >
-        <el-input v-model="domain.value" class="input-add"></el-input>
-        <el-button @click.prevent="removeDomain(domain)">删除</el-button>
-      </el-form-item>
+        <div class="form detail">
+          <el-input v-model="item.title"></el-input>
+          <el-button @click.prevent="addDetail(index)">增加详情</el-button>
+          <el-button @click.prevent="removeDomain(item)">删除</el-button>
+        </div>
 
-      <el-form-item>
-        <el-button @click="addDomain">新增域名</el-button>
+        <!-- 这里是详情的form -->
+        <div>
+          <el-form-item
+            v-for="(child, i) in item.children"
+            :label="child.title"
+            :key="i"
+            :prop="child.title"
+            :rules="{
+              required: true,
+              message: '不能为空',
+              trigger: 'blur',
+            }"
+            class="demo-dynamic"
+            label-width="120px"
+          >
+            <div class="form">
+              <el-input v-model="child.title"></el-input>
+              <el-button @click.prevent="removeChildDomain(index, i)"
+                >删除</el-button
+              >
+            </div>
+          </el-form-item>
+        </div>
       </el-form-item>
     </el-form>
   </div>
@@ -32,12 +57,7 @@ export default {
   data() {
     return {
       dynamicValidateForm: {
-        domains: [
-          {
-            value: '',
-          },
-        ],
-        email: '',
+        addCategory: [],
       },
     };
   },
@@ -55,28 +75,51 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    removeDomain(item) {
-      var index = this.dynamicValidateForm.domains.indexOf(item);
-      if (index !== -1) {
-        this.dynamicValidateForm.domains.splice(index, 1);
+    //增加参数配置
+    addDomain() {
+      this.dynamicValidateForm.addCategory.push({
+        value: '',
+        title: '',
+        children: [],
+      });
+    },
+    //增加详情按钮
+    addDetail(index) {
+      this.dynamicValidateForm.addCategory[index].children.push({
+        title: '',
+        value: '',
+      });
+    },
+    //删除详情
+    removeChildDomain(index, i) {
+      // console.log(i, index);
+      let one = this.dynamicValidateForm.addCategory[index].children.indexOf[i];
+      // console.log('one');
+      if (one !== -1) {
+        this.dynamicValidateForm.addCategory[index].children.splice(i, 1);
       }
     },
-    addDomain() {
-      this.dynamicValidateForm.domains.push({
-        value: '',
-        key: Date.now(),
-      });
+    removeDomain(item) {
+      var index = this.dynamicValidateForm.addCategory.indexOf(item);
+      if (index !== -1) {
+        this.dynamicValidateForm.addCategory.splice(index, 1);
+      }
     },
   },
 };
 </script>
 
 <style lang="less" scoped>
+.form {
+  display: flex;
+  button {
+    margin-left: 0.5rem;
+  }
+}
 .add {
   margin: 0.5rem 0;
-  .input-add {
-    width: 70%;
-    margin-right: 1rem;
-  }
+}
+.demo-dynamic {
+  margin: 0.5rem 0;
 }
 </style>

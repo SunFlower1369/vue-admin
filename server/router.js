@@ -38,7 +38,7 @@ router.post('/login', (req, res) => {
         jwtSecret.secret,
         //配置过期时间
         {
-          expiresIn: 20 * 1,
+          expiresIn: '2h',
         }
       );
       res.send({
@@ -325,8 +325,9 @@ router.get('/params/search', (req, res) => {
 router.get('/backend/itemParam/insertItemParam', (req, res) => {
   var itemCatId = req.query.itemCatId;
   var paramData = req.query.paramData;
-  sql = 'insert into params values(null,?,?)';
-  sqlFun(sql, [itemCatId, paramData], (result) => {
+  var paramName = req.query.paramName;
+  sql = 'insert into params values(null,?,?,?)';
+  sqlFun(sql, [itemCatId, paramData, paramName], (result) => {
     if (result.affectedRows > 0) {
       //影响行数大于0
       res.send({

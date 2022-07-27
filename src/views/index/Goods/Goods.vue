@@ -192,7 +192,7 @@ export default {
     //更换页码的时候调用goodsListSelect方法    已完成
     changePage(num) {
       this.goodsListSelect(num);
-      console.log('切换了吗');
+      // console.log('切换了吗');
     },
     //搜索操作    已完成
     search(val) {
